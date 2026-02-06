@@ -1,0 +1,332 @@
+[
+  {
+    "model": "catalogo.area",
+    "pk": 1,
+    "fields": {
+      "name": "Economía",
+      "slug": "economia",
+      "description": "",
+      "order": 0,
+      "created_at": "2026-01-25T02:39:14.460Z",
+      "updated_at": "2026-01-25T02:39:14.469Z"
+    }
+  },
+  {
+    "model": "catalogo.area",
+    "pk": 2,
+    "fields": {
+      "name": "Psicometría",
+      "slug": "psicometria",
+      "description": "",
+      "order": 0,
+      "created_at": "2026-01-25T02:39:14.460Z",
+      "updated_at": "2026-01-25T02:39:14.469Z"
+    }
+  },
+  {
+    "model": "catalogo.area",
+    "pk": 3,
+    "fields": {
+      "name": "Bioinformática",
+      "slug": "bioinformatica",
+      "description": "",
+      "order": 0,
+      "created_at": "2026-01-25T02:39:14.460Z",
+      "updated_at": "2026-01-25T02:39:14.469Z"
+    }
+  },
+  {
+    "model": "catalogo.trabajo",
+    "pk": 1,
+    "fields": {
+      "area": 1,
+      "title": "Monitoreo: pobreza y condiciones laborales",
+      "slug": "monitoreo-pobreza-y-condiciones-laborales",
+      "tagline": "Brechas persistentes en pobreza y empleo (2016ÔÇô2021)",
+      "summary": "El Monitoreo de pobreza y condiciones laborales visibiliza el estado de derechos econ├│micos y sociales en Ecuador mediante la construcci├│n de indicadores a partir de la ENEMDU, con un enfoque en empleo y grupos en situaci├│n de vulnerabilidad. Los resultados se presentan desagregados por rama de actividad, tipo de trabajo, etnia, sexo y seguridad social, con series para el periodo 2016ÔÇô2021.",
+      "description": "",
+      "highlights": "",
+      "app_url": "https://cdes.org.ec/monitoreo-pobreza-y-condiciones-laborales/",
+      "image": "images/economia/monitoreo-pobreza-y-condiciones-laborales/monitoreo-pobreza-y-condicione_Z1rRiCO.png",
+      "image_url": "",
+      "thumbnail_url": "",
+      "status": "published",
+      "published_at": "2022-10-05T00:00:00Z",
+      "is_featured": false,
+      "order": 0,
+      "created_at": "2026-01-25T02:39:14.481Z",
+      "updated_at": "2026-01-25T02:39:14.487Z"
+    }
+  },
+  {
+    "model": "catalogo.trabajo",
+    "pk": 2,
+    "fields": {
+      "area": 1,
+      "title": "Justicia social y extrema pobreza",
+      "slug": "justicia-social-y-extrema-pobreza",
+      "tagline": "Austeridad y pandemia: brecha social se profundiza",
+      "summary": "La combinación de pandemia y ajuste fiscal/austeridad deterioró políticas sociales y debilitó capacidades estatales, provocando un incremento histórico de pobreza y pobreza extrema en Ecuador y un retroceso en derechos económicos y sociales. En 2021 se reporta 32,2% de pobreza y 14,7% de pobreza extrema, con impactos desproporcionados en población rural, indígena, montubia y en trabajadores no remunerados, por lo que plantea la urgencia de políticas sociales con enfoque de derechos y no discriminación.",
+      "description": "",
+      "highlights": "",
+      "app_url": "https://cdes.org.ec/por-la-justicia-social-es-urgente-reducir-la-pobreza-extrema/",
+      "image": "images/economia/justicia-social-y-extrema-pobreza/justicia-social-y-extrema-pobreza.png",
+      "image_url": "",
+      "thumbnail_url": "",
+      "status": "published",
+      "published_at": "2022-02-20T00:00:00Z",
+      "is_featured": false,
+      "order": 0,
+      "created_at": "2026-01-25T02:39:14.481Z",
+      "updated_at": "2026-01-25T02:39:14.487Z"
+    }
+  },
+  {
+    "model": "catalogo.trabajo",
+    "pk": 3,
+    "fields": {
+      "area": 1,
+      "title": "Monitoreo fiscal y de la deuda pública",
+      "slug": "monitoreo-fiscal-y-de-la-deuda-publica",
+      "tagline": "Aumento del gasto y alta dependencia de deuda externa",
+      "summary": "El Monitoreo fiscal y de la deuda pública presenta un seguimiento de gasto e ingresos del Gobierno Central y de la trayectoria de la deuda, contextualizando su relación con metas fiscales y sostenibilidad. En el 1T-2023 reporta un aumento del gasto público (+7% interanual, hasta USD 8.762 millones) y una deuda pública total de USD 71.715 millones (54,9% del PIB), con predominio de deuda externa (90,2%).",
+      "description": "",
+      "highlights": "",
+      "app_url": "",
+      "image": "images/economia/monitoreo-fiscal-y-de-la-deuda-publica/monitoreo-fiscal-y-de-la-deuda-publica.png",
+      "image_url": "",
+      "thumbnail_url": "",
+      "status": "published",
+      "published_at": "2023-03-26T00:00:00Z",
+      "is_featured": false,
+      "order": 0,
+      "created_at": "2026-01-25T02:39:14.481Z",
+      "updated_at": "2026-01-25T02:39:14.487Z"
+    }
+  },
+  {
+    "model": "catalogo.trabajo",
+    "pk": 4,
+    "fields": {
+      "area": 1,
+      "title": "Deuda p├║blica y austeridad de g├®nero",
+      "slug": "deuda-publica-y-austeridad-de-genero",
+      "tagline": "Austeridad fiscal y desigualdad de g├®nero",
+      "summary": "El CDES analiza c├│mo la austeridad asociada al programa de pr├®stamo del FMI en Ecuador (USD 6.500 millones, 27 meses) traslada costos hacia las mujeres, afectando salud p├║blica, trabajo de cuidados no remunerado y endeudamiento/financiamiento informal, con impactos directos sobre derechos y bienestar.",
+      "description": "",
+      "highlights": "",
+      "app_url": "",
+      "image": "images/economia/deuda-publica-y-austeridad-de-genero/deuda-publica-y-austeridad-de-gener_72Ke9rs.png",
+      "image_url": "",
+      "thumbnail_url": "",
+      "status": "published",
+      "published_at": "2024-03-08T00:00:00Z",
+      "is_featured": false,
+      "order": 0,
+      "created_at": "2026-01-25T02:39:14.481Z",
+      "updated_at": "2026-01-25T02:39:14.487Z"
+    }
+  },
+  {
+    "model": "catalogo.trabajo",
+    "pk": 5,
+    "fields": {
+      "area": 2,
+      "title": "Actitudes hacia las personas con  discapacidad",
+      "slug": "actitudes-hacia-las-personas-con-discapacidad",
+      "tagline": "Diagnóstico actitudinal para fortalecer la inclusión",
+      "summary": "La PUCE realiz├│ un diagn├│stico institucional para comprender c├│mo pensamos, hablamos y actuamos frente a la discapacidad, con el objetivo de fortalecer pol├¡ticas y pr├ícticas de inclusi├│n. El estudio encuest├│ a 2.501 personas de cinco colectivos y 15 facultades, con alta precisi├│n estad├¡stica, y analiz├│ los datos con m├®todos multivariantes que permitieron resumir las actitudes en dos ejes: (1) sensibilizaci├│n en las relaciones y (2) apoyo a derechos y pol├¡ticas de inclusi├│n. Los resultados indican que una inclusi├│n efectiva depende de combinar formaci├│n, contacto de calidad, interacciones con frecuencia adecuada y eliminaci├│n de barreras con apoyos claros; adem├ís, se resalta la importancia del lenguaje respetuoso y recursos educativos para sensibilizar a la comunidad universitaria",
+      "description": "",
+      "highlights": "",
+      "app_url": "https://irma-vanessa-jaya-velano.shinyapps.io/Actitudes/",
+      "image": "images/psicometria/actitudes-hacia-las-personas-con-discapacidad/Actitudes.png",
+      "image_url": "",
+      "thumbnail_url": "",
+      "status": "published",
+      "published_at": "2025-12-03T00:00:00Z",
+      "is_featured": false,
+      "order": 0,
+      "created_at": "2026-01-25T02:39:14.481Z",
+      "updated_at": "2026-01-25T02:39:14.487Z"
+    }
+  },
+  {
+    "model": "catalogo.trabajo",
+    "pk": 6,
+    "fields": {
+      "area": 3,
+      "title": "Análisis Genómico",
+      "slug": "analisis-genomico",
+      "tagline": "Cribado y subtipado por microARNs en 2 etapas",
+      "summary": "Se propone y valida un sistema jer├írquico de dos etapas basado en microARNs para detecci├│n temprana y subtipado por tejido en biopsia l├¡quida, usando validaci├│n anidada LOSO entre estudios con umbrales y calibraci├│n congelados. La Etapa 1 oper├│ a Sp=99% con SeÔëê91.9% y excelente discriminaci├│n (AUC=0.988; AP=0.984) y buena calibraci├│n (ECE=0.012). La Etapa 2 mantuvo Se@Sp99=90.8% y Sp final=99.1%, con Top-1=55.2% y Top-2=72.6%, y calibraci├│n adecuada (ECE=0.112). El enfoque reduce falsos positivos y orienta el diagn├│stico hacia 1ÔÇô2 tejidos plausibles con probabilidades interpretables entre biobancos.",
+      "description": "",
+      "highlights": "",
+      "app_url": "",
+      "image": "images/bioinformatica/analisis-genomico/analisis-genomico_HSCRMV8.png",
+      "image_url": "",
+      "thumbnail_url": "",
+      "status": "published",
+      "published_at": "2025-12-01T00:00:00Z",
+      "is_featured": false,
+      "order": 0,
+      "created_at": "2026-01-25T02:39:14.481Z",
+      "updated_at": "2026-01-25T02:39:14.487Z"
+    }
+  },
+  {
+    "model": "catalogo.documento",
+    "pk": 1,
+    "fields": {
+      "trabajo": 1,
+      "file": "",
+      "url": "https://www.cdes.org.ec/wp-content/uploads/2022/10/Manual-CDES-Indicadores.pdf",
+      "created_at": "2026-01-25T01:35:24.485Z",
+      "title": "Manual de Análisis Estadístico de Datos",
+      "doc_type": "otro",
+      "order": 0
+    }
+  },
+  {
+    "model": "catalogo.documento",
+    "pk": 2,
+    "fields": {
+      "trabajo": 2,
+      "file": "",
+      "url": "https://www.cdes.org.ec/wp-content/uploads/2022/10/Manual-CDES-Indicadores.pdf",
+      "created_at": "2026-01-25T01:35:24.485Z",
+      "title": "Manual de Análisis Estadístico de Datos",
+      "doc_type": "otro",
+      "order": 0
+    }
+  },
+  {
+    "model": "catalogo.documento",
+    "pk": 3,
+    "fields": {
+      "trabajo": 1,
+      "file": "",
+      "url": "https://cdes.org.ec/monitoreo-pobreza-y-condiciones-laborales/",
+      "created_at": "2026-01-25T01:35:24.485Z",
+      "title": "Monitoreo: pobreza y condiciones laborales",
+      "doc_type": "otro",
+      "order": 0
+    }
+  },
+  {
+    "model": "catalogo.documento",
+    "pk": 4,
+    "fields": {
+      "trabajo": 2,
+      "file": "",
+      "url": "https://cdes.org.ec/por-la-justicia-social-es-urgente-reducir-la-pobreza-extrema/",
+      "created_at": "2026-01-25T01:35:24.485Z",
+      "title": "Análisis: justicia social y extrema pobreza",
+      "doc_type": "otro",
+      "order": 0
+    }
+  },
+  {
+    "model": "catalogo.documento",
+    "pk": 5,
+    "fields": {
+      "trabajo": 3,
+      "file": "",
+      "url": "https://cdes.org.ec/monitoreo-fiscal-y-de-la-deuda-publica/",
+      "created_at": "2026-01-25T01:35:24.485Z",
+      "title": "┬┐Qu├® est├í pasando con el gasto fiscal y la deuda externa en el Ecuador?",
+      "doc_type": "otro",
+      "order": 0
+    }
+  },
+  {
+    "model": "catalogo.documento",
+    "pk": 6,
+    "fields": {
+      "trabajo": 4,
+      "file": "",
+      "url": "https://www.cdes.org.ec/wp-content/uploads/2023/03/Resultados-del-endeudamiento-con-el-FMI-sobre-los-cuerpos-de-las-mujeres-en-Ecuador.pdf",
+      "created_at": "2026-01-25T01:35:24.485Z",
+      "title": "Resultados del endeudamiento con el FMI sobre los cuerpos de las mujeres en Ecuador",
+      "doc_type": "otro",
+      "order": 0
+    }
+  },
+  {
+    "model": "catalogo.documento",
+    "pk": 7,
+    "fields": {
+      "trabajo": 4,
+      "file": "",
+      "url": "https://cdes.org.ec/resultados-del-endeudamiento-con-el-fmi-sobre-los-cuerpos-de-las-mujeres-en-ecuador/",
+      "created_at": "2026-01-25T01:35:24.485Z",
+      "title": "Resultados del endeudamiento con el FMI sobre los cuerpos de las mujeres en Ecuador",
+      "doc_type": "otro",
+      "order": 0
+    }
+  },
+  {
+    "model": "catalogo.documento",
+    "pk": 8,
+    "fields": {
+      "trabajo": 5,
+      "file": "docs/psicometria/actitudes-hacia-las-personas-con-discapacidad/Diseño_muestral.pdf",
+      "url": "",
+      "created_at": "2026-01-25T01:35:24.485Z",
+      "title": "Diseño Muestral",
+      "doc_type": "otro",
+      "order": 0
+    }
+  },
+  {
+    "model": "catalogo.documento",
+    "pk": 9,
+    "fields": {
+      "trabajo": 5,
+      "file": "docs/psicometria/actitudes-hacia-las-personas-con-discapacidad/Actitudes_hacia_las_perso_fPGdjrh.pdf",
+      "url": "",
+      "created_at": "2026-01-25T01:35:24.485Z",
+      "title": "Informe: Actitudes hacia las personas con  discapacidad en la PUCE",
+      "doc_type": "otro",
+      "order": 0
+    }
+  },
+  {
+    "model": "catalogo.documento",
+    "pk": 10,
+    "fields": {
+      "trabajo": 5,
+      "file": "",
+      "url": "https://irma-vanessa-jaya-velano.shinyapps.io/Actitudes/",
+      "created_at": "2026-01-25T01:35:24.485Z",
+      "title": "Análisis de resultados",
+      "doc_type": "otro",
+      "order": 0
+    }
+  },
+  {
+    "model": "catalogo.documento",
+    "pk": 11,
+    "fields": {
+      "trabajo": 6,
+      "file": "",
+      "url": "https://alumnosviu-my.sharepoint.com/:w:/g/personal/irma_vanessajayavelano_student_universidadviu_com/IQBsNz1lbnwFRrphRpF4RjE8AUh2WqxWfuZjhTSTMjCASZI?e=y1fE3o",
+      "created_at": "2026-01-25T01:35:24.485Z",
+      "title": "Detección y subtipado de cáncer mediante microARNs en biopsias líquidas",
+      "doc_type": "otro",
+      "order": 0
+    }
+  },
+  {
+    "model": "catalogo.documento",
+    "pk": 12,
+    "fields": {
+      "trabajo": 6,
+      "file": "docs/bioinformatica/analisis-genomico/Análisis_estadístico.pdf",
+      "url": "",
+      "created_at": "2026-01-25T01:35:24.485Z",
+      "title": "Análisis estadístico",
+      "doc_type": "otro",
+      "order": 0
+    }
+  }
+]

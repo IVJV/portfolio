@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}App no disponible | {{ trabajo.title }}{% endblock %}
+
+{% block content %}
+  <p><a href="{% url 'catalogo:trabajo_detail' area.slug trabajo.slug %}">← Volver al trabajo</a></p>
+  <h1>App no disponible</h1>
+  <p>Este trabajo no tiene un enlace configurado para “Estadísticas y reportes”.</p>
+{% endblock %}

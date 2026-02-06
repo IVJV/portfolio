@@ -1,0 +1,93 @@
+/* static/core/css/typography.css */
+
+/* Global typography system (Merriweather + Source Sans 3) */
+:root{
+  --font-sans: "Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  --font-serif: "Merriweather", Georgia, "Times New Roman", Times, serif;
+}
+
+/* Base text */
+body{
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Solid default text color in normal (non-forced-dark) browsers */
+  color: #111827;
+}
+
+p{ margin-bottom: 1rem; }
+strong{ font-weight: 700; }
+
+/* Headings: clearer hierarchy than Bootstrap defaults */
+h1, h2, h3, h4, h5, h6{
+  font-family: var(--font-serif);
+  line-height: 1.22;
+  margin-top: 1.6rem;
+  margin-bottom: 0.75rem;
+
+  /* Headings follow the page text color */
+  color: inherit;
+}
+
+/* Make H1 prominent but not oversized */
+h1{
+  font-weight: 900;
+  font-size: clamp(2.05rem, 2.6vw, 2.7rem);
+  margin-top: 0.4rem; /* first heading on page */
+}
+
+/* Section heading */
+h2{
+  font-weight: 800;
+  font-size: clamp(1.45rem, 1.9vw, 1.9rem);
+  margin-top: 2.0rem;
+}
+
+/* Subsection heading (generic default) */
+h3{
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-top: 1.25rem;
+}
+
+/* Lists: cleaner spacing */
+ul, ol{
+  margin-bottom: 1rem;
+  padding-left: 1.25rem;
+}
+
+li{ margin-bottom: 0.35rem; }
+li:last-child{ margin-bottom: 0; }
+
+/* Keep navbar text in sans explicitly (optional, but safe) */
+.navbar-brand, .nav-link{
+  font-family: var(--font-sans);
+}
+
+/* =========================================================
+   Laboratorio page: only what you want (no h2 lines, no special h3)
+   ========================================================= */
+
+.page-laboratorio h2{
+  font-weight: 900;
+  font-size: clamp(1.60rem, 2.0vw, 2.10rem);
+  margin-top: 2.1rem;
+  margin-bottom: 0.9rem;
+
+  /* Removed the gray underline on Laboratorio headings */
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.page-laboratorio p{
+  max-width: 980px;
+}
+
+/* Laboratorio: add extra space before the page H1 only */
+.page-laboratorio h1{
+  margin-top: 1.8rem;
+}

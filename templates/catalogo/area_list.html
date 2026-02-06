@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Estadísticas | Laboratorio de Estadística Aplicada{% endblock %}
+
+{% block content %}
+  <h1>Estadísticas</h1>
+  <p>Explora las áreas disponibles.</p>
+
+  <ul>
+    {% for area in areas %}
+      <li>
+        <a href="{% url 'catalogo:area_detail' area.slug %}">{{ area.name }}</a>
+        {% if area.description %}<div>{{ area.description }}</div>{% endif %}
+      </li>
+    {% empty %}
+      <li>No hay áreas registradas.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

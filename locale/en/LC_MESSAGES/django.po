@@ -1,0 +1,72 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-26 11:06-0500\n"
+"PO-Revision-Date: 2026-01-26 11:10-0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\templates\base.html:9 .\templates\base.html:326
+#: .\templates\core\home.html:4
+msgid "Laboratorio de Estadística"
+msgstr "Statistics Laboratory"
+
+#: .\templates\base.html:360
+msgid "Inicio"
+msgstr "Home"
+
+#: .\templates\base.html:361
+msgid "Estadísticas"
+msgstr "Statistics"
+
+#: .\templates\base.html:362
+msgid "Laboratorio"
+msgstr "Laboratory"
+
+#: .\templates\base.html:375
+msgid "Contacto"
+msgstr "Contact"
+
+#: .\templates\base.html:388
+msgid "Todos los derechos reservados."
+msgstr "All rights reserved."
+
+#: .\templates\core\home.html:9
+msgid "Estadísticas por área"
+msgstr "Statistics by area"
+
+#: .\templates\core\home.html:29
+msgid "Publicaciones recientes"
+msgstr "Latest publications"
+
+#: .\templates\core\home.html:42
+#, python-format
+msgid "Slide %(n)s"
+msgstr "Slide %(n)s"
+
+#: .\templates\core\home.html:53
+#, python-format
+msgid "Área: %(area)s"
+msgstr "Area: %(area)s"
+
+#: .\templates\core\home.html:60
+msgid "Sin imagen"
+msgstr "No image"
+
+#: .\templates\core\home.html:76
+msgid "Anterior"
+msgstr "Previous"
+
+#: .\templates\core\home.html:80
+msgid "Siguiente"
+msgstr "Next"
+
+#: .\templates\core\home.html:88
+msgid "Aún no hay publicaciones."
+msgstr "No publications yet."

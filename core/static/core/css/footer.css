@@ -1,0 +1,35 @@
+/* static/core/css/footer.css */
+
+/* Footer icon micro-interaction: hover + keyboard focus */
+.lea-footer-icon{
+  transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.lea-footer-icon i{
+  transition: color 140ms ease, transform 140ms ease;
+}
+
+/* Hover: make it clearly clickable */
+.lea-footer-icon:hover{
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.95);
+  box-shadow: 0 10px 18px rgba(0,0,0,0.16);
+  transform: translateY(-1px);
+}
+
+.lea-footer-icon:hover i{
+  color: var(--brand-cyan, #56a9ff);
+  transform: scale(1.05);
+}
+
+/* Keyboard accessibility */
+.lea-footer-icon:focus-visible{
+  outline: 3px solid rgba(86,169,255,0.75);
+  outline-offset: 3px;
+  background: rgba(255,255,255,0.08);
+}
+
+.lea-footer-icon:active{
+  transform: translateY(0);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.14);
+}

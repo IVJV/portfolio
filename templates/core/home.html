@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Laboratorio de Estadística" %}{% endblock %}
+
+{% block content %}
+
+  <div class="bce-band mb-3">
+    {% trans "Estadísticas por área" %}
+  </div>
+
+  <div class="bce-tiles mb-4">
+    {% for a in areas %}
+      <a class="bce-tile" href="{{ a.get_absolute_url }}" target="_blank" rel="noopener">
+        {% if a.slug == "bioinformatica" %}
+          <i class="bi bi-activity"></i>
+        {% elif a.slug == "economia" %}
+          <i class="bi bi-graph-up"></i>
+        {% elif a.slug == "psicometria" %}
+          <i class="bi bi-clipboard-data"></i>
+        {% else %}
+          <i class="bi bi-bar-chart"></i>
+        {% endif %}
+        <p class="bce-tile-title">{{ a.name|upper }}</p>
+      </a>
+    {% endfor %}
+  </div>
+
+  <h3 class="mb-3">{% trans "Publicaciones recientes" %}</h3>
+
+  {% if latest_trabajos %}
+    <div class="lea-carousel-shell">
+      <div class="lea-carousel-card">
+
+        <div id="latestCarousel" class="carousel slide" data-bs-ride="carousel">
+
+          <!-- SLIDE FRAME (la única “tarjeta” visible) -->
+          <div class="lea-slide-frame">
+
+            <!-- Área encima del slide -->
+            <div id="leaAreaPill" class="lea-pill lea-pill-outside"></div>
+
+            <div class="carousel-inner">
+              {% for t in latest_trabajos %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}" data-area="{{ t.area.name }}">
+
+                  <!-- Slide clickeable: abre en nueva pestaña -->
+                  <a class="lea-slide-link"
+                     href="{{ t.get_absolute_url }}"
+                     target="_blank"
+                     rel="noopener"
+                     aria-label="{% blocktrans with title=t.title %}Abrir {{ title }}{% endblocktrans %}">
+
+                    <div class="lea-hero">
+
+                      <div class="lea-media">
+                        {% if t.hero_image %}
+                          <img src="{{ t.hero_image }}" alt="{{ t.title }}">
+                        {% else %}
+                          <div class="text-muted">{% trans "Sin imagen" %}</div>
+                        {% endif %}
+                      </div>
+
+                      <div class="lea-hero-gradient"></div>
+
+                      <div class="lea-hero-caption">
+                        <h4 class="lea-hero-title">{{ t.title }}</h4>
+                        <p class="lea-hero-tagline">{{ t.tagline }}</p>
+                      </div>
+
+                    </div>
+                  </a>
+                  <!-- /Slide clickeable -->
+
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Flechas (FUERA del slide, sin base blanca detrás) -->
+          <button class="lea-arrow lea-arrow-prev" type="button"
+                  data-bs-target="#latestCarousel" data-bs-slide="prev"
+                  aria-label="{% trans 'Anterior' %}">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+
+          <button class="lea-arrow lea-arrow-next" type="button"
+                  data-bs-target="#latestCarousel" data-bs-slide="next"
+                  aria-label="{% trans 'Siguiente' %}">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+
+          <!-- Indicadores (FUERA del slide, abajo) -->
+          <div class="carousel-indicators">
+            {% for t in latest_trabajos %}
+              <button type="button"
+                      data-bs-target="#latestCarousel"
+                      data-bs-slide-to="{{ forloop.counter0 }}"
+                      class="{% if forloop.first %}active{% endif %}"
+                      aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+                      aria-label="{% blocktrans with n=forloop.counter %}Slide {{ n }}{% endblocktrans %}">
+              </button>
+            {% endfor %}
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  {% else %}
+    <p class="text-muted">{% trans "Aún no hay publicaciones." %}</p>
+  {% endif %}
+
+{% endblock %}

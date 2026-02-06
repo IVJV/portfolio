@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ trabajo.title }} | Laboratorio de Estadística{% endblock %}
+
+{% block content %}
+
+  <!-- Header -->
+  <div class="mb-4">
+    <h1 class="h3 mb-2">{{ trabajo.title }}</h1>
+    {% if trabajo.tagline %}
+      <p class="text-muted mb-0">{{ trabajo.tagline }}</p>
+    {% elif trabajo.summary %}
+      <p class="text-muted mb-0">{{ trabajo.summary }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Hero + Summary (image left, text right) -->
+  <div class="row g-4 align-items-start mb-4">
+    <div class="col-12 col-lg-5">
+      {% if trabajo.hero_image %}
+        <div class="bg-white rounded-3 p-3 shadow-sm">
+          <img
+            src="{{ trabajo.hero_image }}"
+            alt="{{ trabajo.title }}"
+            style="width: 100%; height: auto; object-fit: contain; display: block;"
+          >
+        </div>
+      {% endif %}
+    </div>
+    <div class="col-12 col-lg-7">
+      {% if trabajo.summary %}
+        <p class="mb-0">{{ trabajo.summary }}</p>
+      {% elif trabajo.description %}
+        <p class="mb-0">{{ trabajo.description }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Categories block -->
+  <div class="lea-cats">
+
+    <!-- TECH -->
+    {% if docs_tech %}
+      <div class="lea-cat-row">
+        <div class="lea-cat-left">
+          <img src="{% static 'catalogo/icons/technical_document.png' %}" alt="">
+          <div class="lea-cat-label">Documentos<br>técnicos</div>
+        </div>
+
+        <div class="lea-cat-right">
+          {% for d in docs_tech %}
+            <div class="lea-file">
+              {% if d.url %}
+                <!-- URL (web): nicer globe icon -->
+                <span class="material-symbols-outlined lea-ms-icon">language</span>
+                <a href="{{ d.url }}" target="_blank" rel="noopener">{{ d.title }}</a>
+              {% elif d.file %}
+                <i class="bi bi-file-earmark-text text-primary"></i>
+                <a href="{{ d.file.url }}" target="_blank" rel="noopener">{{ d.title }}</a>
+              {% else %}
+                <i class="bi bi-file-earmark-text text-primary"></i>
+                <span>{{ d.title }}</span>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- STATS -->
+    {% if docs_stats %}
+      <div class="lea-cat-row">
+        <div class="lea-cat-left">
+          <img src="{% static 'catalogo/icons/statistics_and_reports.png' %}" alt="">
+          <div class="lea-cat-label">Estadísticas y<br>Reportes</div>
+        </div>
+
+        <div class="lea-cat-right">
+          {% for d in docs_stats %}
+            <div class="lea-file">
+              {% if d.file %}
+                {% with name=d.file.name|lower %}
+                  {% if name|slice:"-4:" == ".pdf" %}
+                    <i class="bi bi-file-earmark-pdf text-danger"></i>
+                  {% elif name|slice:"-5:" == ".xlsx" %}
+                    <i class="bi bi-file-earmark-excel text-success"></i>
+                  {% elif name|slice:"-4:" == ".csv" %}
+                    <i class="bi bi-filetype-csv text-success"></i>
+                  {% elif name|slice:"-5:" == ".html" %}
+                    <i class="bi bi-filetype-html text-primary"></i>
+                  {% else %}
+                    <i class="bi bi-file-earmark text-secondary"></i>
+                  {% endif %}
+                {% endwith %}
+                <a href="{{ d.file.url }}" target="_blank" rel="noopener">{{ d.title }}</a>
+
+              {% elif d.url %}
+                <!-- URL (web): nicer globe icon -->
+                <span class="material-symbols-outlined lea-ms-icon">language</span>
+                <a href="{{ d.url }}" target="_blank" rel="noopener">{{ d.title }}</a>
+
+              {% else %}
+                <i class="bi bi-file-earmark text-secondary"></i>
+                <span>{{ d.title }}</span>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- VIEWERS (prefer docs_viewers; if none, use app_url; never both) -->
+    {% if docs_viewers or trabajo.app_url %}
+      <div class="lea-cat-row">
+        <div class="lea-cat-left">
+          <img src="{% static 'catalogo/icons/viewers.png' %}" alt="">
+          <div class="lea-cat-label">Visualizadores</div>
+        </div>
+
+        <div class="lea-cat-right">
+          {% if docs_viewers %}
+            {% for d in docs_viewers %}
+              <div class="lea-file">
+                <span class="material-symbols-outlined lea-ms-icon">analytics</span>
+                {% if d.url %}
+                  <a href="{{ d.url }}" target="_blank" rel="noopener">{{ d.title }}</a>
+                {% elif d.file %}
+                  <a href="{{ d.file.url }}" target="_blank" rel="noopener">{{ d.title }}</a>
+                {% else %}
+                  <span>{{ d.title }}</span>
+                {% endif %}
+              </div>
+            {% endfor %}
+          {% elif trabajo.app_url %}
+            <div class="lea-file">
+              <span class="material-symbols-outlined lea-ms-icon">analytics</span>
+              <a href="{{ trabajo.app_url }}" target="_blank" rel="noopener">Abrir aplicación</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+
+{% endblock %}

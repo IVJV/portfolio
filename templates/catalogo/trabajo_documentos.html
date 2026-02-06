@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Documentos | {{ trabajo.title }}{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h4 mb-0">Documentos</h1>
+    <a class="btn btn-link"
+       href="{% url 'catalogo:trabajo_detail' trabajo.area.slug trabajo.slug %}">
+      Volver al trabajo
+    </a>
+  </div>
+
+  {% if documentos %}
+    <div class="list-group">
+      {% for d in documentos %}
+        <div class="list-group-item">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <div class="fw-semibold">{{ d.title }}</div>
+              <div class="text-muted small">
+                Tipo: {{ d.get_doc_type_display }} · Orden: {{ d.order }}
+              </div>
+            </div>
+
+            <div class="ms-3">
+              {% if d.file %}
+                <a class="btn btn-sm btn-primary" href="{{ d.file.url }}" target="_blank" rel="noopener">
+                  Abrir
+                </a>
+              {% elif d.url %}
+                <a class="btn btn-sm btn-primary" href="{{ d.url }}" target="_blank" rel="noopener">
+                  Abrir
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">Aún no hay documentos asociados a este trabajo.</p>
+  {% endif %}
+{% endblock %}

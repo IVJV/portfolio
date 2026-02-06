@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+dist/
+build/
+
+# Virtualenv
+.venv/
+venv/
+ENV/
+env/
+
+# Django (local/runtime)
+*.log
+db.sqlite3
+db.sqlite3-journal
+.env
+.env.*
+local_settings.py
+settings_local.py
+
+# Media (do not version)
+media/
+
+# Collected static (generated)
+staticfiles/
+
+# Tests / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Legacy/work folder (even if recreated)
+doc/
