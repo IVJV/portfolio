@@ -4,6 +4,7 @@ from __future__ import annotations
 import os
 from typing import Optional
 
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
@@ -177,7 +178,12 @@ class Documento(models.Model):
     title = models.CharField(max_length=220)
     doc_type = models.CharField(max_length=30, choices=DocType.choices, default=DocType.METHODOLOGY, db_index=True)
 
-    file = models.FileField(upload_to=upload_document_to, blank=True, null=True)
+    file = models.FileField(
+        upload_to=upload_document_to,
+        storage=RawMediaCloudinaryStorage(),
+        blank=True,
+        null=True,
+    )
     url = models.URLField(blank=True)
 
     order = models.PositiveIntegerField(default=0, db_index=True)
