@@ -4,11 +4,69 @@ from __future__ import annotations
 import os
 from typing import Optional
 
-from cloudinary_storage.storage import RawMediaCloudinaryStorage
 from django.core.exceptions import ValidationError
+from django.core.files.storage import Storage, default_storage
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.deconstruct import deconstructible
+
+
+@deconstructible
+class DocumentRawStorage(Storage):
+    """
+    - Production (CLOUDINARY_URL present): Cloudinary RAW storage
+    - Local (no CLOUDINARY_URL): Django default storage (filesystem)
+    """
+
+    def __init__(self):
+        super().__init__()
+        self._backend = None
+
+    def _get_backend(self):
+        if self._backend is not None:
+            return self._backend
+
+        cloudinary_url = os.environ.get("CLOUDINARY_URL", "").strip()
+        if cloudinary_url:
+            # Import ONLY when Cloudinary is configured
+            from cloudinary_storage.storage import RawMediaCloudinaryStorage
+
+            self._backend = RawMediaCloudinaryStorage()
+        else:
+            self._backend = default_storage
+
+        return self._backend
+
+    def _open(self, name, mode="rb"):
+        return self._get_backend()._open(name, mode)
+
+    def _save(self, name, content):
+        return self._get_backend()._save(name, content)
+
+    def delete(self, name):
+        return self._get_backend().delete(name)
+
+    def exists(self, name):
+        return self._get_backend().exists(name)
+
+    def listdir(self, path):
+        return self._get_backend().listdir(path)
+
+    def size(self, name):
+        return self._get_backend().size(name)
+
+    def url(self, name):
+        return self._get_backend().url(name)
+
+    def get_available_name(self, name, max_length=None):
+        return self._get_backend().get_available_name(name, max_length=max_length)
+
+    def path(self, name):
+        backend = self._get_backend()
+        if hasattr(backend, "path"):
+            return backend.path(name)
+        raise NotImplementedError("This storage backend does not support absolute paths.")
 
 
 # ------------------------------------------------------------
@@ -180,7 +238,7 @@ class Documento(models.Model):
 
     file = models.FileField(
         upload_to=upload_document_to,
-        storage=RawMediaCloudinaryStorage(),
+        storage=DocumentRawStorage(),
         blank=True,
         null=True,
     )
