@@ -72,7 +72,7 @@ class DocumentRawStorage(Storage):
 
 
 # ------------------------------------------------------------
-# Upload paths (NEW CLEAN STRUCTURE)
+# Upload paths
 # ------------------------------------------------------------
 
 def _safe_slug(value: Optional[str], fallback: str = "unknown") -> str:
@@ -188,6 +188,28 @@ class Trabajo(models.Model):
         super().save(*args, **kwargs)
 
 
+# ------------------------------------------------------------
+# RESTORED MODEL (THIS FIXES PRODUCTION)
+# ------------------------------------------------------------
+
+class Highlight(models.Model):
+    trabajo = models.ForeignKey(
+        Trabajo,
+        on_delete=models.CASCADE,
+        related_name="highlight_items",
+    )
+    label = models.CharField(max_length=120)
+    value = models.CharField(max_length=220, blank=True)
+    order = models.PositiveIntegerField(default=0, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("order", "id")
+
+    def __str__(self) -> str:
+        return f"{self.label}: {self.value}" if self.value else self.label
+
+
 class Documento(models.Model):
 
     class DocType(models.TextChoices):
@@ -195,7 +217,11 @@ class Documento(models.Model):
         DATA = "datos", "Statistics and reports"
         OTHER = "otro", "Viewers"
 
-    trabajo = models.ForeignKey(Trabajo, on_delete=models.CASCADE, related_name="documentos")
+    trabajo = models.ForeignKey(
+        Trabajo,
+        on_delete=models.CASCADE,
+        related_name="documentos",
+    )
 
     title = models.CharField(max_length=220)
     doc_type = models.CharField(max_length=30, choices=DocType.choices, default=DocType.METHODOLOGY)
