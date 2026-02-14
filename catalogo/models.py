@@ -34,6 +34,7 @@ class DocumentRawStorage(Storage):
         cloudinary_url = os.environ.get("CLOUDINARY_URL", "").strip()
         if cloudinary_url:
             from cloudinary_storage.storage import RawMediaCloudinaryStorage
+
             self._backend = RawMediaCloudinaryStorage()
         else:
             self._backend = default_storage
@@ -73,6 +74,9 @@ class DocumentRawStorage(Storage):
 
 # ------------------------------------------------------------
 # Upload paths
+# Canon:
+#   catalogo/docs/<area_slug>/<trabajo_slug>/<archivo>
+#   catalogo/images/<area_slug>/<trabajo_slug>/<archivo>
 # ------------------------------------------------------------
 
 def _safe_slug(value: Optional[str], fallback: str = "unknown") -> str:
@@ -84,7 +88,9 @@ def upload_trabajo_image_to(instance: "Trabajo", filename: str) -> str:
     area_slug = _safe_slug(getattr(instance.area, "slug", None), "area")
     trabajo_slug = _safe_slug(getattr(instance, "slug", None), "trabajo")
     name = os.path.basename(filename)
-    return f"images/{area_slug}/{trabajo_slug}/{name}"
+
+    # CANON ROOT
+    return f"catalogo/images/{area_slug}/{trabajo_slug}/{name}"
 
 
 def upload_documento_file_to(instance: "Documento", filename: str) -> str:
@@ -92,7 +98,9 @@ def upload_documento_file_to(instance: "Documento", filename: str) -> str:
     area_slug = _safe_slug(getattr(getattr(trabajo, "area", None), "slug", None), "area")
     trabajo_slug = _safe_slug(getattr(trabajo, "slug", None), "trabajo")
     name = os.path.basename(filename)
-    return f"docs/{area_slug}/{trabajo_slug}/{name}"
+
+    # CANON ROOT
+    return f"catalogo/docs/{area_slug}/{trabajo_slug}/{name}"
 
 
 def upload_document_to(instance: "Documento", filename: str) -> str:

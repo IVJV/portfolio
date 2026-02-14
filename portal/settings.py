@@ -217,9 +217,12 @@ if USE_CLOUDINARY:
     }
     DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
-    # Optional explicit config (CLOUDINARY_URL env is still the main source of truth)
+    # Critical: force empty prefix so uploads do NOT get "media/" prepended.
+    # This ensures your canonical structure starts at "catalogo/...".
     CLOUDINARY_STORAGE = {
         "CLOUDINARY_URL": CLOUDINARY_URL,
+        "PREFIX": "",
+        "SECURE": True,
     }
 
 
