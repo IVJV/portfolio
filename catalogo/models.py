@@ -34,7 +34,6 @@ class DocumentRawStorage(Storage):
         cloudinary_url = os.environ.get("CLOUDINARY_URL", "").strip()
         if cloudinary_url:
             from cloudinary_storage.storage import RawMediaCloudinaryStorage
-
             self._backend = RawMediaCloudinaryStorage()
         else:
             self._backend = default_storage
@@ -73,10 +72,7 @@ class DocumentRawStorage(Storage):
 
 
 # ------------------------------------------------------------
-# Upload paths
-# Canon:
-#   catalogo/docs/<area_slug>/<trabajo_slug>/<archivo>
-#   catalogo/images/<area_slug>/<trabajo_slug>/<archivo>
+# Upload paths (CANONICAL STRUCTURE)
 # ------------------------------------------------------------
 
 def _safe_slug(value: Optional[str], fallback: str = "unknown") -> str:
@@ -85,21 +81,25 @@ def _safe_slug(value: Optional[str], fallback: str = "unknown") -> str:
 
 
 def upload_trabajo_image_to(instance: "Trabajo", filename: str) -> str:
+    """
+    Canon:
+      catalogo/images/<area_slug>/<trabajo_slug>/<archivo>
+    """
     area_slug = _safe_slug(getattr(instance.area, "slug", None), "area")
     trabajo_slug = _safe_slug(getattr(instance, "slug", None), "trabajo")
     name = os.path.basename(filename)
-
-    # CANON ROOT
     return f"catalogo/images/{area_slug}/{trabajo_slug}/{name}"
 
 
 def upload_documento_file_to(instance: "Documento", filename: str) -> str:
+    """
+    Canon:
+      catalogo/docs/<area_slug>/<trabajo_slug>/<archivo>
+    """
     trabajo = getattr(instance, "trabajo", None)
     area_slug = _safe_slug(getattr(getattr(trabajo, "area", None), "slug", None), "area")
     trabajo_slug = _safe_slug(getattr(trabajo, "slug", None), "trabajo")
     name = os.path.basename(filename)
-
-    # CANON ROOT
     return f"catalogo/docs/{area_slug}/{trabajo_slug}/{name}"
 
 
@@ -152,6 +152,7 @@ class Trabajo(models.Model):
 
     image = models.ImageField(
         upload_to=upload_trabajo_image_to,
+        max_length=500,  # IMPORTANT: prevent Postgres varchar(100) overflow for long paths
         blank=True,
         null=True,
     )
@@ -237,6 +238,7 @@ class Documento(models.Model):
     file = models.FileField(
         upload_to=upload_document_to,
         storage=DocumentRawStorage(),
+        max_length=500,  # IMPORTANT: prevent Postgres varchar(100) overflow for long paths
         blank=True,
         null=True,
     )

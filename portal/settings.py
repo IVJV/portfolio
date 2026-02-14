@@ -192,23 +192,29 @@ LOCALE_PATHS = [
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# WhiteNoise storage (hashed + compressed)
+
+# -----------------------------
+# Storage (Django 4.2+)
+# -----------------------------
+# Always define both keys to avoid edge-case misconfigurations.
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    }
+    },
 }
+
+# Compatibility for legacy code/packages that still read DEFAULT_FILE_STORAGE
+DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 
 # -----------------------------
 # Media
 # -----------------------------
-# Local dev fallback (filesystem)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
-
-# Compatibility setting for older code / packages that still read DEFAULT_FILE_STORAGE
-DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 if USE_CLOUDINARY:
     # Default storage for ImageField/media uploads
@@ -217,12 +223,9 @@ if USE_CLOUDINARY:
     }
     DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
-    # Critical: force empty prefix so uploads do NOT get "media/" prepended.
-    # This ensures your canonical structure starts at "catalogo/...".
+    # Optional explicit config (CLOUDINARY_URL env is still the main source of truth)
     CLOUDINARY_STORAGE = {
         "CLOUDINARY_URL": CLOUDINARY_URL,
-        "PREFIX": "",
-        "SECURE": True,
     }
 
 
