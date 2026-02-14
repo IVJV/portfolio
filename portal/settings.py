@@ -33,7 +33,14 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "dev-insecure-secret-key")
 # Production-safe default: DEBUG off unless explicitly enabled
 DEBUG = env_bool("DEBUG", False)
 
-ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "127.0.0.1,localhost")
+# ALLOWED_HOSTS:
+# - In local: default to localhost.
+# - In production (Railway): allow *.railway.app by default if not provided.
+_allowed_hosts_env = env_list("ALLOWED_HOSTS", "127.0.0.1,localhost")
+if DEBUG:
+    ALLOWED_HOSTS = _allowed_hosts_env
+else:
+    ALLOWED_HOSTS = _allowed_hosts_env or [".railway.app", "localhost", "127.0.0.1"]
 
 # Needed behind proxies (Railway/Render) when DEBUG=False
 if not DEBUG:
@@ -103,7 +110,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
 
 ROOT_URLCONF = "portal.urls"
 
@@ -197,21 +203,35 @@ STORAGES = {
 # -----------------------------
 # Media
 # -----------------------------
-# Local dev fallback
+# Local dev fallback (filesystem)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# Compatibility setting for older code / packages that still read DEFAULT_FILE_STORAGE
+DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+
 if USE_CLOUDINARY:
-    # Professional default: treat default MEDIA as images.
-    # PDFs/Docs should be RAW storage per-field in models (FileField(storage=RawMediaCloudinaryStorage())).
+    # Default storage for ImageField/media uploads
     STORAGES["default"] = {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     }
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+    # Optional explicit config (CLOUDINARY_URL env is still the main source of truth)
+    CLOUDINARY_STORAGE = {
+        "CLOUDINARY_URL": CLOUDINARY_URL,
+    }
+
 
 # -----------------------------
 # CSRF / Security (recommended for production)
 # -----------------------------
-CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", "")
+# In production you should set CSRF_TRUSTED_ORIGINS explicitly, but provide a safe Railway default.
+_csrf_env = env_list("CSRF_TRUSTED_ORIGINS", "")
+if _csrf_env:
+    CSRF_TRUSTED_ORIGINS = _csrf_env
+else:
+    CSRF_TRUSTED_ORIGINS = [] if DEBUG else ["https://*.railway.app"]
 
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
