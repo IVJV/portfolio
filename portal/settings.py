@@ -248,3 +248,9 @@ if not DEBUG:
 # Misc
 # -----------------------------
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# -----------------------------
+# Rich text (Phase 1)
+# -----------------------------
+# Feature flag: turn on only after Phase 2 templates are in place.
+ENABLE_RICHTEXT = env_bool("ENABLE_RICHTEXT", False)
