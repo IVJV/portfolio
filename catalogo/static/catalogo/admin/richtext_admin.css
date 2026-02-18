@@ -16,13 +16,22 @@
 
 /* Right-side preview container */
 .rt-preview-box{
-  flex: 0 0 420px;
-  max-width: 520px;
+  flex: 0 0 460px;
+  max-width: 560px;
+}
+
+/* Toolbar */
+.rt-toolbar{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
 }
 
 /* Button: keep admin look */
 .rt-preview-btn{
-  margin-bottom: 8px;
+  margin: 0;
 }
 
 /* Panel styling using Django admin theme variables */
@@ -38,6 +47,10 @@
 .rt-preview-body{
   font-size: 13px;
   line-height: 1.45;
+}
+
+.rt-muted{
+  opacity: 0.75;
 }
 
 /* Basic typography inside preview */
@@ -62,6 +75,38 @@
 .rt-error{
   color: var(--error-fg, #ba2121);
   font-weight: 600;
+}
+
+/* Cheat sheet */
+.rt-cheatsheet{
+  border: 1px dashed rgba(86,169,255,0.45);
+  border-radius: 8px;
+  padding: 6px 10px;
+  background: rgba(86,169,255,0.08);
+}
+
+.rt-cheatsheet > summary{
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--body-fg, #111);
+}
+
+.rt-cheatsheet-body{
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--body-fg, #111);
+}
+
+.rt-cheatsheet-body code{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 11px;
+}
+
+.rt-line{ margin: 2px 0; }
+
+.rt-note{
+  opacity: 0.8;
+  margin-top: 4px;
 }
 
 /* Responsive: stack on small screens */

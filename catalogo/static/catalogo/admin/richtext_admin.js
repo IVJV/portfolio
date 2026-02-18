@@ -2,27 +2,27 @@
 (function () {
   "use strict";
 
-  // Default preview endpoint (matches Phase 3 url)
-  const PREVIEW_URL = window.RICHTEXT_PREVIEW_URL || "/admin/richtext/preview/";
+  function getCsrfToken() {
+    // Prefer hidden input in the form
+    const input = document.querySelector('input[name="csrfmiddlewaretoken"]');
+    if (input && input.value) return input.value;
 
-  function getCookie(name) {
-    const cookieValue = document.cookie
-      .split(";")
-      .map((c) => c.trim())
-      .find((c) => c.startsWith(name + "="));
-    return cookieValue ? decodeURIComponent(cookieValue.split("=")[1]) : "";
+    // Fallback: cookie
+    const m = document.cookie.match(/csrftoken=([^;]+)/);
+    return m ? decodeURIComponent(m[1]) : "";
   }
 
-  async function fetchPreviewHTML(text, mode) {
-    const csrftoken = getCookie("csrftoken");
+  async function fetchPreviewHTML(previewUrl, text, mode) {
+    const csrftoken = getCsrfToken();
 
-    const resp = await fetch(PREVIEW_URL, {
+    const resp = await fetch(previewUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "X-CSRFToken": csrftoken,
         "X-Requested-With": "XMLHttpRequest",
       },
+      credentials: "same-origin",
       body: JSON.stringify({ text: text || "", mode: mode || "block" }),
     });
 
@@ -31,126 +31,150 @@
       throw new Error(msg || `Preview request failed (${resp.status})`);
     }
 
-    // Accept either JSON {html: "..."} or raw HTML response
-    const contentType = (resp.headers.get("content-type") || "").toLowerCase();
-    if (contentType.includes("application/json")) {
-      const data = await resp.json();
-      return data.html || "";
-    }
-    return await resp.text();
+    const data = await resp.json();
+    return data.html || "";
   }
 
-  function ensurePreviewUI(fieldEl, mode) {
-    // We attach UI once per field
+  function buildCheatSheet(mode) {
+    // Inline vs block guidance
+    const lines =
+      mode === "inline"
+        ? [
+            "<code>**negrita**</code> → <strong>negrita</strong>",
+            "<code>*cursiva*</code> → <em>cursiva</em>",
+            "<code>[texto](https://ejemplo.com)</code> → link",
+            "<div class='rt-note'>Inline recomendado: evita listas o saltos grandes.</div>",
+          ]
+        : [
+            "<code>**negrita**</code> → <strong>negrita</strong>",
+            "<code>*cursiva*</code> → <em>cursiva</em>",
+            "<code>[texto](https://ejemplo.com)</code> → link",
+            "<code>- item</code> → lista",
+            "<code>1. item</code> → lista numerada",
+            "<div class='rt-note'>Párrafos: deja una línea en blanco entre bloques.</div>",
+          ];
+
+    const details = document.createElement("details");
+    details.className = "rt-cheatsheet";
+
+    const summary = document.createElement("summary");
+    summary.textContent = "Markdown cheat sheet";
+
+    const body = document.createElement("div");
+    body.className = "rt-cheatsheet-body";
+    body.innerHTML = lines.map((x) => `<div class="rt-line">${x}</div>`).join("");
+
+    details.appendChild(summary);
+    details.appendChild(body);
+    return details;
+  }
+
+  function ensurePreviewUI(fieldEl) {
     if (fieldEl.dataset.rtBound === "1") return;
 
     fieldEl.dataset.rtBound = "1";
-    fieldEl.dataset.rtMode = mode;
 
-    // Where to append: in Django admin, each field is inside .form-row
+    const mode = fieldEl.dataset.richtextMode || fieldEl.dataset.rtMode || "block";
+    const previewUrl = fieldEl.dataset.richtextPreviewUrl || "/_richtext/preview/";
+
     const row = fieldEl.closest(".form-row") || fieldEl.parentElement;
     if (!row) return;
 
     row.classList.add("rt-row");
 
-    // Create container on the right side (same row)
     const box = document.createElement("div");
     box.className = "rt-preview-box";
 
-    // Button
+    const toolbar = document.createElement("div");
+    toolbar.className = "rt-toolbar";
+
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "button rt-preview-btn";
     btn.textContent = "Preview";
+    btn.setAttribute("aria-expanded", "false");
 
-    // Panel (hidden by default)
+    const cheat = buildCheatSheet(mode);
+
+    toolbar.appendChild(btn);
+    toolbar.appendChild(cheat);
+
     const panel = document.createElement("div");
     panel.className = "rt-preview-panel";
     panel.hidden = true;
 
-    // Body (render target)
     const body = document.createElement("div");
     body.className = "rt-preview-body";
 
     panel.appendChild(body);
 
-    // Put into DOM
-    box.appendChild(btn);
+    box.appendChild(toolbar);
     box.appendChild(panel);
 
-    // IMPORTANT: avoid showing any “help text” — we intentionally do NOT add it.
+    // Cache + debounce
+    let open = false;
+    let lastValue = null;
+    let timer = null;
 
-    // Cache last rendered content to avoid needless requests
-    let lastRenderedValue = null;
-    let lastRenderedMode = mode;
-
-    async function openPanel() {
+    async function render() {
       const currentValue = fieldEl.value || "";
+      if (lastValue === currentValue) return;
 
-      // Only render if needed
-      if (lastRenderedValue !== currentValue || lastRenderedMode !== mode) {
-        body.classList.add("rt-loading");
-        body.innerHTML = "";
-        try {
-          const html = await fetchPreviewHTML(currentValue, mode);
-          body.innerHTML = html || "";
-          lastRenderedValue = currentValue;
-          lastRenderedMode = mode;
-        } catch (err) {
-          body.innerHTML =
-            `<div class="rt-error">Preview error: ${String(err.message || err)}</div>`;
-        } finally {
-          body.classList.remove("rt-loading");
-        }
+      body.classList.add("rt-loading");
+      body.innerHTML = "";
+
+      try {
+        const html = await fetchPreviewHTML(previewUrl, currentValue, mode);
+        body.innerHTML = html || "<div class='rt-muted'>(empty)</div>";
+        lastValue = currentValue;
+      } catch (err) {
+        body.innerHTML = `<div class="rt-error">Preview error: ${String(
+          err.message || err
+        )}</div>`;
+      } finally {
+        body.classList.remove("rt-loading");
       }
+    }
 
+    function openPanel() {
+      open = true;
       panel.hidden = false;
-      box.classList.add("is-open");
       btn.setAttribute("aria-expanded", "true");
+      void render();
     }
 
     function closePanel() {
+      open = false;
       panel.hidden = true;
-      box.classList.remove("is-open");
       btn.setAttribute("aria-expanded", "false");
     }
 
-    function togglePanel() {
-      if (panel.hidden) {
-        void openPanel();
-      } else {
-        closePanel();
-      }
-    }
-
-    btn.addEventListener("click", togglePanel);
-
-    // Optional: if user types while preview is open, mark it stale (re-render on next open)
-    fieldEl.addEventListener("input", () => {
-      if (!panel.hidden) {
-        // keep open but re-render quickly after pause? -> no (simpler)
-        // just mark stale and show subtle hint
-        lastRenderedValue = null;
-      }
+    btn.addEventListener("click", () => {
+      if (!open) openPanel();
+      else closePanel();
     });
 
-    // Insert box at the end of the row (right side)
+    fieldEl.addEventListener("input", () => {
+      lastValue = null;
+      if (!open) return;
+
+      if (timer) window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        void render();
+      }, 250);
+    });
+
     row.appendChild(box);
   }
 
   function init() {
-    // Tagline is short: inline markdown preview
-    const tagline = document.getElementById("id_tagline");
-    if (tagline) ensurePreviewUI(tagline, "inline");
+    const fields = [
+      document.getElementById("id_tagline"),
+      document.getElementById("id_summary"),
+      document.getElementById("id_description"),
+    ].filter(Boolean);
 
-    // Summary/Description: block markdown preview
-    const summary = document.getElementById("id_summary");
-    if (summary) ensurePreviewUI(summary, "block");
-
-    const description = document.getElementById("id_description");
-    if (description) ensurePreviewUI(description, "block");
-
-    // If you later add more rich fields, you can bind them here.
+    fields.forEach(ensurePreviewUI);
   }
 
   document.addEventListener("DOMContentLoaded", init);

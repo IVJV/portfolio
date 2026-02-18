@@ -2,6 +2,7 @@
 from django.contrib import admin
 from django import forms
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 
 from .models import Area, Trabajo, Documento, Highlight
 
@@ -35,7 +36,6 @@ class TrabajoAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Keep your original tagline help text + word limit
         if "tagline" in self.fields:
             self.fields["tagline"].help_text = (
                 "Texto corto que acompaña al título en la card del área. "
@@ -43,7 +43,6 @@ class TrabajoAdminForm(forms.ModelForm):
                 "Soporta Markdown inline: *cursiva* y **negrita**."
             )
 
-        # Add admin UX (Phase 3): preview + cheat sheet
         self._enable_richtext_admin_ux()
 
     def _enable_richtext_admin_ux(self) -> None:
@@ -52,11 +51,14 @@ class TrabajoAdminForm(forms.ModelForm):
         - Preview (server-side)
         - Cheat sheet
         """
+        preview_url = reverse("richtext_preview")
+
         # Tagline = inline markdown
         if "tagline" in self.fields:
             w = self.fields["tagline"].widget
             w.attrs["class"] = (w.attrs.get("class", "") + " js-richtext").strip()
             w.attrs["data-richtext-mode"] = "inline"
+            w.attrs["data-richtext-preview-url"] = preview_url
 
         # Summary/Description = block markdown
         for fname in ("summary", "description"):
@@ -64,8 +66,8 @@ class TrabajoAdminForm(forms.ModelForm):
                 w = self.fields[fname].widget
                 w.attrs["class"] = (w.attrs.get("class", "") + " js-richtext").strip()
                 w.attrs["data-richtext-mode"] = "block"
+                w.attrs["data-richtext-preview-url"] = preview_url
 
-                # Optional: reinforce help text without overwhelming the form
                 base_help = (self.fields[fname].help_text or "").strip()
                 extra = (
                     "Soporta Markdown: **negrita**, *cursiva*, links [texto](url), listas (- item). "
@@ -107,7 +109,6 @@ class TrabajoAdmin(admin.ModelAdmin):
     date_hierarchy = "published_at"
     ordering = ("-published_at", "-created_at")
 
-    # Highlights + Documents inside each Work
     inlines = [HighlightInline, DocumentoInline]
 
     fieldsets = (

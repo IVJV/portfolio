@@ -10,11 +10,11 @@ urlpatterns = [
     # Language switch endpoint (required)
     path("i18n/", include("django.conf.urls.i18n")),
 
-    # Admin
-    path("admin/", admin.site.urls),
-
     # Admin-only richtext preview (Phase 3)
     path("_richtext/preview/", richtext_preview, name="richtext_preview"),
+
+    # Admin
+    path("admin/", admin.site.urls),
 
     # Public site
     path("", include("core.urls")),
