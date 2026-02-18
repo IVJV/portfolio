@@ -34,11 +34,44 @@ class TrabajoAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # Keep your original tagline help text + word limit
         if "tagline" in self.fields:
             self.fields["tagline"].help_text = (
                 "Texto corto que acompaña al título en la card del área. "
-                f"Máximo recomendado: {self.MAX_TAGLINE_WORDS} palabras (para ~2 líneas)."
+                f"Máximo recomendado: {self.MAX_TAGLINE_WORDS} palabras (para ~2 líneas). "
+                "Soporta Markdown inline: *cursiva* y **negrita**."
             )
+
+        # Add admin UX (Phase 3): preview + cheat sheet
+        self._enable_richtext_admin_ux()
+
+    def _enable_richtext_admin_ux(self) -> None:
+        """
+        Adds CSS classes + data attributes so the admin JS can inject:
+        - Preview (server-side)
+        - Cheat sheet
+        """
+        # Tagline = inline markdown
+        if "tagline" in self.fields:
+            w = self.fields["tagline"].widget
+            w.attrs["class"] = (w.attrs.get("class", "") + " js-richtext").strip()
+            w.attrs["data-richtext-mode"] = "inline"
+
+        # Summary/Description = block markdown
+        for fname in ("summary", "description"):
+            if fname in self.fields:
+                w = self.fields[fname].widget
+                w.attrs["class"] = (w.attrs.get("class", "") + " js-richtext").strip()
+                w.attrs["data-richtext-mode"] = "block"
+
+                # Optional: reinforce help text without overwhelming the form
+                base_help = (self.fields[fname].help_text or "").strip()
+                extra = (
+                    "Soporta Markdown: **negrita**, *cursiva*, links [texto](url), listas (- item). "
+                    "Usa “Preview” para ver el resultado."
+                )
+                self.fields[fname].help_text = (base_help + (" " if base_help else "") + extra).strip()
 
     def clean_tagline(self):
         tagline = (self.cleaned_data.get("tagline") or "").strip()
@@ -89,6 +122,12 @@ class TrabajoAdmin(admin.ModelAdmin):
 
     class Media:
         css = {
-            "all": ("catalogo/admin/admin_tooltips.css",)
+            "all": (
+                "catalogo/admin/admin_tooltips.css",
+                "catalogo/admin/richtext_admin.css",
+            )
         }
-        js = ("catalogo/admin/admin_tooltips.js",)
+        js = (
+            "catalogo/admin/admin_tooltips.js",
+            "catalogo/admin/richtext_admin.js",
+        )

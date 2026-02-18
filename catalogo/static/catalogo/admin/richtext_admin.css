@@ -1,0 +1,71 @@
+/* catalogo/static/catalogo/admin/richtext_admin.css */
+
+/* Small toolbar under richtext fields */
+.rt-tools{
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rt-tools .rt-btn{
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+/* Preview box */
+.rt-preview{
+  margin-top: 10px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 12px 14px;
+  max-width: 980px;
+}
+
+.rt-preview.is-hidden{
+  display: none;
+}
+
+.rt-preview .rt-preview-title{
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.rt-preview .rt-preview-body{
+  color: #111827;
+}
+
+.rt-preview .rt-preview-body p{
+  margin: 0 0 0.9rem 0;
+}
+
+.rt-preview .rt-preview-body p:last-child{
+  margin-bottom: 0;
+}
+
+/* Cheat sheet */
+.rt-cheatsheet{
+  margin-top: 10px;
+  max-width: 980px;
+}
+
+.rt-cheatsheet summary{
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.rt-cheatsheet .rt-cheatsheet-body{
+  margin-top: 8px;
+  border: 1px dashed #cbd5e1;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.rt-cheatsheet code{
+  background: rgba(15, 23, 42, 0.06);
+  padding: 1px 6px;
+  border-radius: 6px;
+}
