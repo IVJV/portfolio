@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static richtext %}
 {% block title %}{{ trabajo.title }} | Laboratorio de Estadística{% endblock %}
 
 {% block content %}
@@ -7,10 +7,11 @@
   <!-- Header -->
   <div class="mb-4">
     <h1 class="h3 mb-2">{{ trabajo.title }}</h1>
+
     {% if trabajo.tagline %}
-      <p class="text-muted mb-0">{{ trabajo.tagline }}</p>
+      <p class="text-muted mb-0">{{ trabajo.tagline|md_inline }}</p>
     {% elif trabajo.summary %}
-      <p class="text-muted mb-0">{{ trabajo.summary }}</p>
+      <p class="text-muted mb-0">{{ trabajo.summary|md_text }}</p>
     {% endif %}
   </div>
 
@@ -27,11 +28,16 @@
         </div>
       {% endif %}
     </div>
+
     <div class="col-12 col-lg-7">
       {% if trabajo.summary %}
-        <p class="mb-0">{{ trabajo.summary }}</p>
+        <div>
+          {{ trabajo.summary|md }}
+        </div>
       {% elif trabajo.description %}
-        <p class="mb-0">{{ trabajo.description }}</p>
+        <div>
+          {{ trabajo.description|md }}
+        </div>
       {% endif %}
     </div>
   </div>
@@ -51,7 +57,6 @@
           {% for d in docs_tech %}
             <div class="lea-file">
               {% if d.url %}
-                <!-- URL (web): nicer globe icon -->
                 <span class="material-symbols-outlined lea-ms-icon">language</span>
                 <a href="{{ d.url }}" target="_blank" rel="noopener">{{ d.title }}</a>
               {% elif d.file %}
@@ -95,7 +100,6 @@
                 <a href="{{ d.file.url }}" target="_blank" rel="noopener">{{ d.title }}</a>
 
               {% elif d.url %}
-                <!-- URL (web): nicer globe icon -->
                 <span class="material-symbols-outlined lea-ms-icon">language</span>
                 <a href="{{ d.url }}" target="_blank" rel="noopener">{{ d.title }}</a>
 

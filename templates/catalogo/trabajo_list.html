@@ -1,16 +1,24 @@
 {% extends "base.html" %}
+{% load richtext %}
 
 {% block title %}{{ area.name }} | Estadísticas{% endblock %}
 
 {% block content %}
   <h1>{{ area.name }}</h1>
-  {% if area.description %}<p>{{ area.description }}</p>{% endif %}
+
+  {% if area.description %}
+    <div class="text-muted">
+      {{ area.description|md }}
+    </div>
+  {% endif %}
 
   <ul>
     {% for trabajo in trabajos %}
       <li>
         <a href="{% url 'catalogo:trabajo_detail' area.slug trabajo.slug %}">{{ trabajo.title }}</a>
-        {% if trabajo.summary %}<div>{{ trabajo.summary }}</div>{% endif %}
+        {% if trabajo.summary %}
+          <div class="text-muted">{{ trabajo.summary|md_inline }}</div>
+        {% endif %}
       </li>
     {% empty %}
       <li>No hay trabajos publicados en esta área.</li>

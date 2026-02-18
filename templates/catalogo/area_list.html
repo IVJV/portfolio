@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load richtext %}
 
 {% block title %}Estadísticas | Laboratorio de Estadística Aplicada{% endblock %}
 
@@ -10,7 +11,9 @@
     {% for area in areas %}
       <li>
         <a href="{% url 'catalogo:area_detail' area.slug %}">{{ area.name }}</a>
-        {% if area.description %}<div>{{ area.description }}</div>{% endif %}
+        {% if area.description %}
+          <div class="text-muted">{{ area.description|md_inline }}</div>
+        {% endif %}
       </li>
     {% empty %}
       <li>No hay áreas registradas.</li>

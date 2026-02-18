@@ -1,11 +1,15 @@
 {% extends "base.html" %}
+{% load richtext %}
+
 {% block title %}{{ area.name }} | Area{% endblock %}
 
 {% block content %}
   <h1 class="h3 mb-3">{{ area.name }}</h1>
 
   {% if area.description %}
-    <p class="text-muted">{{ area.description }}</p>
+    <div class="text-muted">
+      {{ area.description|md }}
+    </div>
   {% endif %}
 
   <hr>
@@ -43,9 +47,9 @@
                 <h5 class="card-title mb-1">{{ t.title }}</h5>
 
                 {% if t.tagline %}
-                  <p class="card-text text-muted mb-2">{{ t.tagline }}</p>
+                  <p class="card-text text-muted mb-2">{{ t.tagline|md_inline }}</p>
                 {% elif t.summary %}
-                  <p class="card-text text-muted mb-2">{{ t.summary|truncatechars:140 }}</p>
+                  <p class="card-text text-muted mb-2">{{ t.summary|md_text|truncatechars:140 }}</p>
                 {% endif %}
               </div>
 

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n richtext %}
 
 {% block title %}{% trans "Laboratorio de Estadística" %}{% endblock %}
 
@@ -65,7 +65,12 @@
 
                       <div class="lea-hero-caption">
                         <h4 class="lea-hero-title">{{ t.title }}</h4>
-                        <p class="lea-hero-tagline">{{ t.tagline }}</p>
+
+                        {% if t.tagline %}
+                          <p class="lea-hero-tagline">{{ t.tagline|md_inline }}</p>
+                        {% elif t.summary %}
+                          <p class="lea-hero-tagline">{{ t.summary|md_text|truncatechars:140 }}</p>
+                        {% endif %}
                       </div>
 
                     </div>
