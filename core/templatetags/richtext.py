@@ -5,9 +5,11 @@ from django import template
 from django.conf import settings
 from django.utils.safestring import mark_safe
 
-from core.utils.richtext import render_md_block, render_md_inline, render_md_text
-
 register = template.Library()
+
+
+def _enabled() -> bool:
+    return bool(getattr(settings, "ENABLE_RICHTEXT", False))
 
 
 @register.filter(name="md")
@@ -15,8 +17,9 @@ def md_filter(value: str) -> str:
     """
     Block Markdown -> sanitized HTML.
     """
-    if not getattr(settings, "ENABLE_RICHTEXT", False):
+    if not _enabled():
         return value
+    from core.utils.richtext import render_md_block  # lazy import
     return mark_safe(render_md_block(value))
 
 
@@ -25,8 +28,9 @@ def md_inline_filter(value: str) -> str:
     """
     Inline Markdown -> sanitized HTML.
     """
-    if not getattr(settings, "ENABLE_RICHTEXT", False):
+    if not _enabled():
         return value
+    from core.utils.richtext import render_md_inline  # lazy import
     return mark_safe(render_md_inline(value))
 
 
@@ -35,6 +39,7 @@ def md_text_filter(value: str) -> str:
     """
     Markdown -> plain text (safe for truncation).
     """
-    if not getattr(settings, "ENABLE_RICHTEXT", False):
+    if not _enabled():
         return value
+    from core.utils.richtext import render_md_text  # lazy import
     return render_md_text(value)
