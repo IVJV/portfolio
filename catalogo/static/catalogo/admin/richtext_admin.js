@@ -2,157 +2,155 @@
 (function () {
   "use strict";
 
-  const PREVIEW_URL = "/_richtext/preview/";
-  const DEBOUNCE_MS = 250;
+  // Default preview endpoint (matches Phase 3 url)
+  const PREVIEW_URL = window.RICHTEXT_PREVIEW_URL || "/admin/richtext/preview/";
 
   function getCookie(name) {
-    // Django docs approach (cookie-based CSRF)
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(";").shift();
-    return null;
+    const cookieValue = document.cookie
+      .split(";")
+      .map((c) => c.trim())
+      .find((c) => c.startsWith(name + "="));
+    return cookieValue ? decodeURIComponent(cookieValue.split("=")[1]) : "";
   }
 
-  function debounce(fn, waitMs) {
-    let t = null;
-    return function (...args) {
-      window.clearTimeout(t);
-      t = window.setTimeout(() => fn.apply(this, args), waitMs);
-    };
-  }
-
-  function isTextControl(el) {
-    return el && (el.tagName === "TEXTAREA" || (el.tagName === "INPUT" && el.type === "text"));
-  }
-
-  async function fetchPreview(text, mode) {
+  async function fetchPreviewHTML(text, mode) {
     const csrftoken = getCookie("csrftoken");
-    const body = new URLSearchParams({ text: text || "", mode: mode || "block" });
 
     const resp = await fetch(PREVIEW_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-        "X-CSRFToken": csrftoken || "",
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken,
         "X-Requested-With": "XMLHttpRequest",
       },
-      body,
-      credentials: "same-origin",
+      body: JSON.stringify({ text: text || "", mode: mode || "block" }),
     });
 
     if (!resp.ok) {
-      throw new Error(`Preview request failed (${resp.status})`);
+      const msg = await resp.text();
+      throw new Error(msg || `Preview request failed (${resp.status})`);
     }
 
-    return await resp.json();
-  }
-
-  function buildCheatSheet(mode) {
-    const details = document.createElement("details");
-    details.className = "rt-cheatsheet";
-
-    const summary = document.createElement("summary");
-    summary.textContent = "Markdown cheat sheet";
-    details.appendChild(summary);
-
-    const body = document.createElement("div");
-    body.className = "rt-cheatsheet-body";
-
-    // Keep it minimal and aligned with your “allowed subset”
-    const items = [];
-
-    items.push(`<div><code>**negrita**</code> → <strong>negrita</strong></div>`);
-    items.push(`<div><code>*cursiva*</code> → <em>cursiva</em></div>`);
-    items.push(`<div><code>[texto](https://ejemplo.com)</code> → link</div>`);
-
-    if (mode === "block") {
-      items.push(`<div style="margin-top:6px;"><code>- item</code> → lista</div>`);
-      items.push(`<div><code>1. item</code> → lista numerada</div>`);
-      items.push(`<div style="margin-top:6px;">Párrafos: deja una línea en blanco entre bloques.</div>`);
-    } else {
-      items.push(`<div style="margin-top:6px;">Inline recomendado: evita listas o saltos grandes.</div>`);
+    // Accept either JSON {html: "..."} or raw HTML response
+    const contentType = (resp.headers.get("content-type") || "").toLowerCase();
+    if (contentType.includes("application/json")) {
+      const data = await resp.json();
+      return data.html || "";
     }
-
-    body.innerHTML = items.join("");
-    details.appendChild(body);
-
-    return details;
+    return await resp.text();
   }
 
-  function attachRichTextUI(field) {
-    if (!isTextControl(field)) return;
+  function ensurePreviewUI(fieldEl, mode) {
+    // We attach UI once per field
+    if (fieldEl.dataset.rtBound === "1") return;
 
-    const mode = (field.dataset.richtextMode || "block").toLowerCase() === "inline" ? "inline" : "block";
+    fieldEl.dataset.rtBound = "1";
+    fieldEl.dataset.rtMode = mode;
 
-    // Container under the field
-    const tools = document.createElement("div");
-    tools.className = "rt-tools";
+    // Where to append: in Django admin, each field is inside .form-row
+    const row = fieldEl.closest(".form-row") || fieldEl.parentElement;
+    if (!row) return;
 
-    const btnPreview = document.createElement("button");
-    btnPreview.type = "button";
-    btnPreview.className = "button rt-btn";
-    btnPreview.textContent = "Preview";
-    tools.appendChild(btnPreview);
+    row.classList.add("rt-row");
 
-    // Preview box
-    const preview = document.createElement("div");
-    preview.className = "rt-preview is-hidden";
+    // Create container on the right side (same row)
+    const box = document.createElement("div");
+    box.className = "rt-preview-box";
 
-    const title = document.createElement("div");
-    title.className = "rt-preview-title";
-    title.textContent = "Preview";
-    preview.appendChild(title);
+    // Button
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "button rt-preview-btn";
+    btn.textContent = "Preview";
 
+    // Panel (hidden by default)
+    const panel = document.createElement("div");
+    panel.className = "rt-preview-panel";
+    panel.hidden = true;
+
+    // Body (render target)
     const body = document.createElement("div");
     body.className = "rt-preview-body";
-    body.innerHTML = "<em>Click “Preview” to render…</em>";
-    preview.appendChild(body);
 
-    // Cheat sheet
-    const cheat = buildCheatSheet(mode);
+    panel.appendChild(body);
 
-    // Insert after the field
-    field.insertAdjacentElement("afterend", cheat);
-    field.insertAdjacentElement("afterend", preview);
-    field.insertAdjacentElement("afterend", tools);
+    // Put into DOM
+    box.appendChild(btn);
+    box.appendChild(panel);
 
-    let previewOpen = false;
+    // IMPORTANT: avoid showing any “help text” — we intentionally do NOT add it.
 
-    async function updatePreview() {
-      try {
-        const data = await fetchPreview(field.value || "", mode);
+    // Cache last rendered content to avoid needless requests
+    let lastRenderedValue = null;
+    let lastRenderedMode = mode;
 
-        if (!data.enabled) {
-          body.innerHTML = "<em>Preview disabled (ENABLE_RICHTEXT is off).</em>";
-          return;
+    async function openPanel() {
+      const currentValue = fieldEl.value || "";
+
+      // Only render if needed
+      if (lastRenderedValue !== currentValue || lastRenderedMode !== mode) {
+        body.classList.add("rt-loading");
+        body.innerHTML = "";
+        try {
+          const html = await fetchPreviewHTML(currentValue, mode);
+          body.innerHTML = html || "";
+          lastRenderedValue = currentValue;
+          lastRenderedMode = mode;
+        } catch (err) {
+          body.innerHTML =
+            `<div class="rt-error">Preview error: ${String(err.message || err)}</div>`;
+        } finally {
+          body.classList.remove("rt-loading");
         }
+      }
 
-        const html = (data.html || "").trim();
-        body.innerHTML = html ? html : "<em>(empty)</em>";
-      } catch (err) {
-        body.innerHTML = `<em>Preview error: ${String(err.message || err)}</em>`;
+      panel.hidden = false;
+      box.classList.add("is-open");
+      btn.setAttribute("aria-expanded", "true");
+    }
+
+    function closePanel() {
+      panel.hidden = true;
+      box.classList.remove("is-open");
+      btn.setAttribute("aria-expanded", "false");
+    }
+
+    function togglePanel() {
+      if (panel.hidden) {
+        void openPanel();
+      } else {
+        closePanel();
       }
     }
 
-    const debouncedUpdate = debounce(() => {
-      if (previewOpen) updatePreview();
-    }, DEBOUNCE_MS);
+    btn.addEventListener("click", togglePanel);
 
-    field.addEventListener("input", debouncedUpdate);
-
-    btnPreview.addEventListener("click", async () => {
-      previewOpen = !previewOpen;
-      preview.classList.toggle("is-hidden", !previewOpen);
-
-      if (previewOpen) {
-        await updatePreview();
+    // Optional: if user types while preview is open, mark it stale (re-render on next open)
+    fieldEl.addEventListener("input", () => {
+      if (!panel.hidden) {
+        // keep open but re-render quickly after pause? -> no (simpler)
+        // just mark stale and show subtle hint
+        lastRenderedValue = null;
       }
     });
+
+    // Insert box at the end of the row (right side)
+    row.appendChild(box);
   }
 
   function init() {
-    const fields = document.querySelectorAll(".js-richtext");
-    fields.forEach((f) => attachRichTextUI(f));
+    // Tagline is short: inline markdown preview
+    const tagline = document.getElementById("id_tagline");
+    if (tagline) ensurePreviewUI(tagline, "inline");
+
+    // Summary/Description: block markdown preview
+    const summary = document.getElementById("id_summary");
+    if (summary) ensurePreviewUI(summary, "block");
+
+    const description = document.getElementById("id_description");
+    if (description) ensurePreviewUI(description, "block");
+
+    // If you later add more rich fields, you can bind them here.
   }
 
   document.addEventListener("DOMContentLoaded", init);
