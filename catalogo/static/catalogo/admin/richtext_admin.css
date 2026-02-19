@@ -60,11 +60,56 @@
 .rt-preview-body ol{ margin: 0.25em 0 0.75em 1.25em; }
 .rt-preview-body li{ margin: 0.2em 0; }
 .rt-preview-body a{ color: var(--link-fg, #0b57d0); }
+
+/* ----------------------------
+   INLINE CODE (formula/token style)
+   - No red
+   - Uses Cambria Math if available
+   - Works in dark/light via admin CSS vars
+   ---------------------------- */
 .rt-preview-body code{
+  /* IMPORTANT: avoid inheriting "danger/red" styles from other CSS */
+  color: inherit;
+
+  /* Academic-ish formula style (best-effort):
+     Cambria Math (if installed) -> system fallbacks -> monospace */
+  font-family:
+    "Cambria Math",
+    "STIX Two Math",
+    "Latin Modern Math",
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    "Liberation Mono",
+    "Courier New",
+    monospace;
+
+  font-size: 0.96em;
+
   background: var(--darkened-bg, rgba(0,0,0,0.06));
   border: 1px solid var(--hairline-color, rgba(0,0,0,0.12));
   border-radius: 6px;
   padding: 0.1em 0.35em;
+}
+
+/* If someday block code appears, keep it readable */
+.rt-preview-body pre{
+  background: var(--darkened-bg, rgba(0,0,0,0.04));
+  border: 1px solid var(--hairline-color, rgba(0,0,0,0.12));
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 0.25em 0 0.75em 0;
+  overflow: auto;
+}
+
+.rt-preview-body pre code{
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: 0.95em;
+  white-space: pre;
 }
 
 /* Loading / error */
