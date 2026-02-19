@@ -9,7 +9,7 @@
 }
 
 /* =========================
-   Sticky footer (clean)
+   Sticky footer (NO estira cards)
    ========================= */
 html, body { height: 100%; }
 
@@ -20,23 +20,17 @@ body{
   flex-direction: column;
 }
 
-/* MAIN is full width and carries the spacing above footer */
-.site-main{
-  flex: 1;
-  background: #f8f9fa;
-
-  /* This replaces any old footer margin-top gap */
-  padding-bottom: 28px;
-}
+main{ flex: 1; }
 /* ========================= */
 
 .bg-brand { background: var(--brand-blue); }
 .navbar-brand, .nav-link { font-weight: 600; }
 
-/* Align logo image + title */
+/* ===== FIX: Align logo image + title (robust, minimal scope) ===== */
 header .navbar-brand { line-height: 1; }
 header .navbar-brand img { display: block; }
 header .navbar-brand { display: inline-flex; align-items: center; }
+/* ================================================================= */
 
 /* Language switcher */
 .lang-switch a,
@@ -66,16 +60,27 @@ header .navbar-brand { display: inline-flex; align-items: center; }
   background: var(--brand-blue);
   color: #ffffff;
 
-  /* Keep it compact and consistent */
-  padding: 22px 0;
+  /* Mantén el “aire” entre contenido y footer aquí (fuera del footer) */
+  margin-top: 40px;
 
-  /* IMPORTANT: no gap that Dark Reader will paint as black */
-  margin-top: 0;
+  /* Padding simétrico: evita que “arriba” se vea más pesado que “abajo” */
+  padding: 28px 0;
+}
+
+/* Centrado vertical/visual del bloque dentro del footer */
+.lea-footer .container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  /* Controla el “aire” interno sin inflar padding superior */
+  gap: 10px;
 }
 
 .lea-footer h6{
   font-weight: 800;
-  margin-bottom: 10px;
+  margin: 0; /* antes: margin-bottom: 12px; */
 }
 
 .lea-footer a{
@@ -92,7 +97,8 @@ header .navbar-brand { display: inline-flex; align-items: center; }
   gap: 14px;
   justify-content: center;
   align-items: center;
-  margin-bottom: 8px;
+
+  margin: 0; /* antes: margin-bottom: 10px; */
 }
 
 .lea-footer-icon{
