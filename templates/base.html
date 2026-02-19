@@ -7,9 +7,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Prevent Dark Reader from altering the site (avoids black band artifacts on zoom) -->
-  <meta name="darkreader-lock">
-
   <title>{% block title %}{% trans "Laboratorio de Estadística" %}{% endblock %}</title>
 
   <!-- Favicon -->
@@ -110,9 +107,11 @@
     </div>
   </header>
 
-  <!-- Keep normal spacing; we will control the bottom gap from CSS -->
-  <main class="container py-4">
-    {% block content %}{% endblock %}
+  <!-- MAIN full-width + inner container -->
+  <main class="site-main">
+    <div class="container py-4">
+      {% block content %}{% endblock %}
+    </div>
   </main>
 
   <footer class="lea-footer">

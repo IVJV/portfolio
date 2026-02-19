@@ -9,13 +9,9 @@
 }
 
 /* =========================
-   Sticky footer (stable)
+   Sticky footer (clean)
    ========================= */
 html, body { height: 100%; }
-
-html{
-  background: #f8f9fa;
-}
 
 body{
   background: #f8f9fa;
@@ -24,37 +20,13 @@ body{
   flex-direction: column;
 }
 
-main{
+/* MAIN is full width and carries the spacing above footer */
+.site-main{
   flex: 1;
-}
+  background: #f8f9fa;
 
-/* IMPORTANT:
-   This creates a "footer-colored buffer" at the end of main,
-   so Dark Reader doesn't show a seam/band between content and footer.
-*/
-main.container{
-  position: relative;
-  padding-bottom: 48px; /* aesthetic spacing above footer content */
-}
-
-/* Footer-colored buffer that DOES NOT cover text */
-main.container::after{
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  height: 48px;                 /* must match padding-bottom above */
-  background: var(--brand-blue); /* same as footer */
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Keep real content above the buffer */
-main.container > *{
-  position: relative;
-  z-index: 1;
+  /* This replaces any old footer margin-top gap */
+  padding-bottom: 28px;
 }
 /* ========================= */
 
@@ -93,7 +65,11 @@ header .navbar-brand { display: inline-flex; align-items: center; }
 .lea-footer{
   background: var(--brand-blue);
   color: #ffffff;
+
+  /* Keep it compact and consistent */
   padding: 22px 0;
+
+  /* IMPORTANT: no gap that Dark Reader will paint as black */
   margin-top: 0;
 }
 
