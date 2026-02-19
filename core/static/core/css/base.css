@@ -9,7 +9,7 @@
 }
 
 /* =========================
-   Sticky footer layout
+   Sticky footer (stable)
    ========================= */
 html, body { height: 100%; }
 
@@ -24,24 +24,25 @@ body{
   flex-direction: column;
 }
 
-/* main grows normally */
 main{
   flex: 1;
 }
 
-/* =========================
-   HEADER
-   ========================= */
+/* Give breathing room above the footer (aesthetic) */
+main.container{
+  padding-bottom: 32px; /* adjust 24–40px if you want */
+}
+/* ========================= */
+
 .bg-brand { background: var(--brand-blue); }
 .navbar-brand, .nav-link { font-weight: 600; }
 
+/* Align logo image + title */
 header .navbar-brand { line-height: 1; }
 header .navbar-brand img { display: block; }
 header .navbar-brand { display: inline-flex; align-items: center; }
 
-/* =========================
-   Language switch
-   ========================= */
+/* Language switcher */
 .lang-switch a,
 .lang-switch button{
   color: rgba(255,255,255,0.85);
@@ -63,23 +64,15 @@ header .navbar-brand { display: inline-flex; align-items: center; }
 }
 
 /* =========================
-   VISUAL SPACING BEFORE FOOTER
+   Footer (base styles)
    ========================= */
-/* This creates aesthetic spacing but keeps same color as footer */
 .lea-footer{
   background: var(--brand-blue);
   color: #ffffff;
-
-  /* Proper internal spacing */
   padding: 22px 0;
-
-  /* This creates separation WITHOUT showing body background */
-  box-shadow: 0 -40px 0 var(--brand-blue);
+  margin-top: 0;
 }
 
-/* =========================
-   Footer content
-   ========================= */
 .lea-footer h6{
   font-weight: 800;
   margin-bottom: 10px;
