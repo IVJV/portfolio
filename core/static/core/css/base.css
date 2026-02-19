@@ -13,6 +13,14 @@
    ========================= */
 html, body { height: 100%; }
 
+/* IMPORTANT:
+   Dark Reader often sets <html> background to pure black.
+   If any "gap" reveals <html>, you'll see a dark band.
+   Force html + body to share the same background. */
+html{
+  background: #f8f9fa;
+}
+
 body{
   background: #f8f9fa;
   min-height: 100vh;
@@ -20,10 +28,15 @@ body{
   flex-direction: column;
 }
 
-/* Make main take remaining height and prevent child margin-collapsing (fix footer gap) */
+/* main grows + avoid margin-collapsing */
 main{
   flex: 1;
-  display: flow-root; /* prevents margin-collapsing with children */
+  display: flow-root;
+}
+
+/* Hard-stop any accidental bottom padding from utilities/cascade */
+main.container{
+  padding-bottom: 0 !important;
 }
 /* ========================= */
 
@@ -63,13 +76,16 @@ header .navbar-brand { display: inline-flex; align-items: center; }
 .lea-footer{
   background: var(--brand-blue);
   color: #ffffff;
-  padding: 28px 0;
+
+  /* Reduce top/bottom padding a bit so "Contacto" isn't too low */
+  padding: 18px 0;
+
   margin-top: 0;
 }
 
 .lea-footer h6{
   font-weight: 800;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .lea-footer a{
@@ -86,7 +102,7 @@ header .navbar-brand { display: inline-flex; align-items: center; }
   gap: 14px;
   justify-content: center;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .lea-footer-icon{
@@ -114,7 +130,7 @@ header .navbar-brand { display: inline-flex; align-items: center; }
 /* =========================
    Footer gap fix (robust)
    ========================= */
-/* Remove bottom margin from last text blocks to avoid a visible band above footer */
+/* Remove bottom margin from last blocks to avoid a visible band above footer */
 main p:last-child,
 main ul:last-child,
 main ol:last-child,
@@ -122,7 +138,6 @@ main dl:last-child{
   margin-bottom: 0;
 }
 
-/* If content is wrapped in <section>, also ensure its last child doesn't add extra gap */
 main section > :last-child{
   margin-bottom: 0;
 }
