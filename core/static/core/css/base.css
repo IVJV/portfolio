@@ -28,9 +28,33 @@ main{
   flex: 1;
 }
 
-/* Give breathing room above the footer (aesthetic) */
+/* IMPORTANT:
+   This creates a "footer-colored buffer" at the end of main,
+   so Dark Reader doesn't show a seam/band between content and footer.
+*/
 main.container{
-  padding-bottom: 32px; /* adjust 24–40px if you want */
+  position: relative;
+  padding-bottom: 48px; /* aesthetic spacing above footer content */
+}
+
+/* Footer-colored buffer that DOES NOT cover text */
+main.container::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 48px;                 /* must match padding-bottom above */
+  background: var(--brand-blue); /* same as footer */
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Keep real content above the buffer */
+main.container > *{
+  position: relative;
+  z-index: 1;
 }
 /* ========================= */
 
