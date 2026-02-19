@@ -59,14 +59,7 @@ header .navbar-brand { display: inline-flex; align-items: center; }
 .lea-footer{
   background: var(--brand-blue);
   color: #ffffff;
-
-  /* BEFORE:
-     padding: 28px 0;
-     margin-top: 40px;
-  */
-
-  /* OPTION A: absorb the "gap" into the footer so it keeps the same background */
-  padding: 68px 0 28px; /* 28 + 40 on top */
+  padding: 28px 0;
   margin-top: 0;
 }
 
@@ -113,3 +106,6 @@ header .navbar-brand { display: inline-flex; align-items: center; }
   text-align: center;
   margin: 0;
 }
+
+/* Prevent the last block inside <main> from leaving a bottom gap */
+main > :last-child{ margin-bottom: 0; }
