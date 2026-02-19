@@ -9,14 +9,10 @@
 }
 
 /* =========================
-   Sticky footer (NO estira cards)
+   Sticky footer layout
    ========================= */
 html, body { height: 100%; }
 
-/* IMPORTANT:
-   Dark Reader often sets <html> background to pure black.
-   If any "gap" reveals <html>, you'll see a dark band.
-   Force html + body to share the same background. */
 html{
   background: #f8f9fa;
 }
@@ -28,28 +24,24 @@ body{
   flex-direction: column;
 }
 
-/* main grows + avoid margin-collapsing */
+/* main grows normally */
 main{
   flex: 1;
-  display: flow-root;
 }
 
-/* Hard-stop any accidental bottom padding from utilities/cascade */
-main.container{
-  padding-bottom: 0 !important;
-}
-/* ========================= */
-
+/* =========================
+   HEADER
+   ========================= */
 .bg-brand { background: var(--brand-blue); }
 .navbar-brand, .nav-link { font-weight: 600; }
 
-/* ===== FIX: Align logo image + title (robust, minimal scope) ===== */
 header .navbar-brand { line-height: 1; }
 header .navbar-brand img { display: block; }
 header .navbar-brand { display: inline-flex; align-items: center; }
-/* ================================================================= */
 
-/* Language switcher */
+/* =========================
+   Language switch
+   ========================= */
 .lang-switch a,
 .lang-switch button{
   color: rgba(255,255,255,0.85);
@@ -71,18 +63,23 @@ header .navbar-brand { display: inline-flex; align-items: center; }
 }
 
 /* =========================
-   Footer (base styles)
+   VISUAL SPACING BEFORE FOOTER
    ========================= */
+/* This creates aesthetic spacing but keeps same color as footer */
 .lea-footer{
   background: var(--brand-blue);
   color: #ffffff;
 
-  /* Reduce top/bottom padding a bit so "Contacto" isn't too low */
-  padding: 18px 0;
+  /* Proper internal spacing */
+  padding: 22px 0;
 
-  margin-top: 0;
+  /* This creates separation WITHOUT showing body background */
+  box-shadow: 0 -40px 0 var(--brand-blue);
 }
 
+/* =========================
+   Footer content
+   ========================= */
 .lea-footer h6{
   font-weight: 800;
   margin-bottom: 10px;
@@ -125,19 +122,4 @@ header .navbar-brand { display: inline-flex; align-items: center; }
   font-size: 0.9rem;
   text-align: center;
   margin: 0;
-}
-
-/* =========================
-   Footer gap fix (robust)
-   ========================= */
-/* Remove bottom margin from last blocks to avoid a visible band above footer */
-main p:last-child,
-main ul:last-child,
-main ol:last-child,
-main dl:last-child{
-  margin-bottom: 0;
-}
-
-main section > :last-child{
-  margin-bottom: 0;
 }
