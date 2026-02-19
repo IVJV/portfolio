@@ -20,7 +20,11 @@ body{
   flex-direction: column;
 }
 
-main{ flex: 1; }
+/* Make main take remaining height and prevent child margin-collapsing (fix footer gap) */
+main{
+  flex: 1;
+  display: flow-root; /* prevents margin-collapsing with children */
+}
 /* ========================= */
 
 .bg-brand { background: var(--brand-blue); }
@@ -107,5 +111,18 @@ header .navbar-brand { display: inline-flex; align-items: center; }
   margin: 0;
 }
 
-/* Prevent the last block inside <main> from leaving a bottom gap */
-main > :last-child{ margin-bottom: 0; }
+/* =========================
+   Footer gap fix (robust)
+   ========================= */
+/* Remove bottom margin from last text blocks to avoid a visible band above footer */
+main p:last-child,
+main ul:last-child,
+main ol:last-child,
+main dl:last-child{
+  margin-bottom: 0;
+}
+
+/* If content is wrapped in <section>, also ensure its last child doesn't add extra gap */
+main section > :last-child{
+  margin-bottom: 0;
+}
