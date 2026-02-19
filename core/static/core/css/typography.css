@@ -5,11 +5,8 @@
   --font-sans: "Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
   --font-serif: "Merriweather", Georgia, "Times New Roman", Times, serif;
 
-  /* Academic-ish math/token stack for inline formulas (best-effort across OS) */
-  --font-formula: "Cambria Math", "STIX Two Math", "STIXGeneral", "Noto Sans Math",
-                  "DejaVu Math TeX Gyre", "Latin Modern Math",
-                  ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-                  "Liberation Mono", "Courier New", monospace;
+  /* Formula / inline-code font (academic-ish, portable) */
+  --font-formula: "Cambria Math", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 /* Base text */
@@ -75,37 +72,28 @@ li:last-child{ margin-bottom: 0; }
 }
 
 /* =========================================================
-   Inline "formula / token" styling for Markdown backticks
-   - Prevent Bootstrap's red/pink code color
-   - Keep it subtle and academic-looking
+   Inline "formula" style via Markdown backticks: `...`
+   Goal: different font WITHOUT background box
    ========================================================= */
 
-code{
+/* Only inline code (not code blocks) */
+:not(pre) > code{
   font-family: var(--font-formula);
-  font-size: 0.96em;
-  color: inherit;                 /* overrides Bootstrap --bs-code-color */
-  background: rgba(31,43,103,0.06);
-  border: 1px solid rgba(31,43,103,0.14);
-  border-radius: 6px;
-  padding: 0.08em 0.34em;
-  letter-spacing: 0.1px;
-  white-space: nowrap;            /* reads like a token/formula */
-}
-
-/* If code appears inside links, keep link color behavior */
-a code{
+  font-size: 0.98em;
   color: inherit;
+
+  /* Remove the “pill/box” look completely */
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+
+  /* Slightly more “academic” numeric rendering */
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
-/* Don't let code blocks inherit the inline token styling */
+/* Keep code blocks unaffected (if you ever use them) */
 pre code{
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-               "Liberation Mono", "Courier New", monospace;
-  font-size: inherit;
-  background: transparent;
-  border: 0;
-  padding: 0;
-  white-space: pre;               /* preserve formatting inside blocks */
+  font-family: var(--font-formula);
 }
 
 /* =========================================================
